@@ -393,46 +393,54 @@ int main()
 {
 ////  ----------------------------------------
 ////  Original test From Dr. Robert A. Pilgrim http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
-//        int width = 3;
-//        int length = 3;
-//        double cost_matrix[] = {1, 2, 3,
-//                                2, 4, 6,
-//                                3, 6, 9};
-
+        int width  = 3;
+        int length = 3;
+        double cost_matrix[] = {1, 2, 3,
+                                2, 4, 6,
+                                3, 6, 9};
 //// --------------------------------------------------------------------
 ////  Test of the example in https://www.wikihow.com/Use-the-Hungarian-Algorithm
-    int width = 5;
-    int length = 4;
-    double cost_matrix[] =
-                         {10, 19, 8, 15,
-                          10, 18, 7, 17,
-                          13, 16, 9, 14,
-                          12, 19, 8, 18,
-                          14, 17,10, 19};
+//    int width  = 5;
+//    int length = 4;
+//    double cost_matrix[] =
+//                         {10, 19, 8, 15,
+//                          10, 18, 7, 17,
+//                          13, 16, 9, 14,
+//                          12, 19, 8, 18,
+//                          14, 17,10, 19};
 //// --------------------------------------------------------------------
 ////  More tests, for fun
+//    int width  = 4;
+//    int length = 4;
 //    double cost_matrix[] = { 1,  9, 23,  4,
 //                             6, 10, 11,  2,
 //                             5,  4, 33, 11,
 //                            10, 11,  9, 10};
 //// --------------------------------------------------------------------
+//    int width  = 4;
+//    int length = 4;
 //    double cost_matrix[] = { 1,  6,  5, 10,
 //                             9, 10,  4, 11,
 //                            23, 11, 33,  9,
 //                             4,  2, 11, 10};
 //// -------------------------------------------------
+//    int width  = 4;
+//    int length = 4;
 //    double cost_matrix[] = { 1.1,  9.1, 23.2,  4.1,
 //                             6.1, 10.1, 11.1,  2.1,
 //                             4.1,  6.1, 33.1, 11.1,
 //                            10.1,  9.1, 11.1, 10.1};
 //// -------------------------------------------------
+//    int width  = 4;
+//    int length = 4;
 //    double cost_matrix[] = {   0,    0,    0,    0,
-//                           0,    1,    1,    0,
-//                           0,    1,    1,    0,
-//                           0,    0,    0,    0};
+//                               0,    1,    1,    0,
+//                               0,    1,    1,    0,
+//                               0,    0,    0,    0};
 //// -----------------------------------------------------------------------
 ////  Test example from https://github.com/hrldcpr/hungarian
-//    int edge_length = 8;
+//    int width  = 8;
+//    int length = 8;
 //    double cost_matrix[] = {1000,   2,  11,  10,   9,   7,   6,   5, // #0
 //                               6,1000,   1,  8,    8,   4,   6,   7, // #1
 //                               5,  12,1000,  11,   8,  12,   3,  11, // #2
