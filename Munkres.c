@@ -40,6 +40,9 @@
 #include "stdio.h"
 #include "string.h"
 #include "float.h"
+typedef int bool;
+#define true 1
+#define false 0
 
 void print_cost_matrix(double *cost, int width, int length) // {cost: pointer to cost matrix, width: row number of matrix, length: column number of matrix}
 {
@@ -86,8 +89,9 @@ void step_one(double *cost, int width, int length)
 
 void step_two(double *cost, int *mask, int width, int length)
 {
-    int row_cover[width] = {0};
-    int col_cover[length] = {0};
+    int row_cover[width], col_cover[length];
+	memset(row_cover, 0, sizeof(int)*width);
+	memset(col_cover, 0, sizeof(int)*length);
     for (int i=0; i<width; ++i)
     {
         for (int j=0; j<length; ++j)
@@ -242,7 +246,8 @@ int step_five(int *mask, int width, int length, int *row_cover, int *col_cover, 
     int row = -1;
     int col = -1;
     int count = 1;
-    int path[width+length-1] = {0};
+    int path[width+length-1];
+	memset(path, 0, sizeof(int)*(width+length-1));
     *(path + count*2 - 2) = *path_row_0; // The result from step 4 becomes the first element in a list called path (starting point in path)
     *(path + count*2 - 1) = *path_col_0;
     printf("starting zero for the zig-zag path: (%d, %d)\n", *path_row_0, *path_col_0);
@@ -308,15 +313,13 @@ double total_cost(double *cost, int *mask, int width, int length)
                 sum += *(cost+i*length+j);
     return sum;
 }
+
 int main() {
 //  //  ----------------------------------------
 //  //  Original test From Dr. Robert A. Pilgrim http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
         int width = 3;
         int length = 3;
-        double cost_matrix[width * length] =
-                                     {1, 2, 3,
-                                      2, 4, 6,
-                                      3, 6, 9};
+        double cost_matrix[] = {1, 2, 3, 2, 4, 6, 3, 6, 9};
 //  // --------------------------------------------------------------------
 //  //  Test of the example in https://www.wikihow.com/Use-the-Hungarian-Algorithm
 //  int width = 5;
@@ -364,9 +367,12 @@ int main() {
 
     double cost_matrix_copy[width * length];
     memcpy(cost_matrix_copy, cost_matrix, sizeof(double)*width*length);
-    int mask_matrix[width * length] = {0};
-    int row_cover[width] = {0};
-    int col_cover[length] = {0};
+    int mask_matrix[width * length];
+	memset(mask_matrix, 0, sizeof(int)*width*length);
+    int row_cover[width];
+	memset(row_cover, 0, sizeof(int)*width);
+    int col_cover[length];
+	memset(col_cover, 0, sizeof(int)*length);
 
     printf("Step 1 begins...\n");
     step_one(cost_matrix, width, length);
