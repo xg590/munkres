@@ -90,8 +90,8 @@ void step_one(double *cost, int width, int length)
 void step_two(double *cost, int *mask, int width, int length)
 {
     int row_cover[width], col_cover[length];
-	memset(row_cover, 0, sizeof(int)*width);
-	memset(col_cover, 0, sizeof(int)*length);
+    memset(row_cover, 0, sizeof(int)*width);
+    memset(col_cover, 0, sizeof(int)*length);
     for (int i=0; i<width; ++i)
     {
         for (int j=0; j<length; ++j)
@@ -247,7 +247,7 @@ int step_five(int *mask, int width, int length, int *row_cover, int *col_cover, 
     int col = -1;
     int count = 1;
     int path[width+length-1];
-	memset(path, 0, sizeof(int)*(width+length-1));
+    memset(path, 0, sizeof(int)*(width+length-1));
     *(path + count*2 - 2) = *path_row_0; // The result from step 4 becomes the first element in a list called path (starting point in path)
     *(path + count*2 - 1) = *path_col_0;
     printf("starting zero for the zig-zag path: (%d, %d)\n", *path_row_0, *path_col_0);
@@ -314,65 +314,32 @@ double total_cost(double *cost, int *mask, int width, int length)
     return sum;
 }
 
-int main() {
-//  //  ----------------------------------------
-//  //  Original test From Dr. Robert A. Pilgrim http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
-        int width = 3;
-        int length = 3;
-        double cost_matrix[] = {1, 2, 3, 2, 4, 6, 3, 6, 9};
-//  // --------------------------------------------------------------------
-//  //  Test of the example in https://www.wikihow.com/Use-the-Hungarian-Algorithm
-//  int width = 5;
-//  int length = 4;
-//  double cost_matrix[width * length] =
-//                             {10, 19, 8, 15,
-//                              10, 18, 7, 17,
-//                              13, 16, 9, 14,
-//                              12, 19, 8, 18,
-//                              14, 17,10, 19};
-//  // --------------------------------------------------------------------
-//  //  More tests, for fun
-//      double cost_matrix[] = { 1,  9, 23,  4,
-//                               6, 10, 11,  2,
-//                               5,  4, 33, 11,
-//                              10, 11,  9, 10};
-//  // --------------------------------------------------------------------
-//      double cost_matrix[] = { 1,  6,  5, 10,
-//                               9, 10,  4, 11,
-//                              23, 11, 33,  9,
-//                               4,  2, 11, 10};
-//  // -------------------------------------------------
-//      double cost_matrix[] = { 1.1,  9.1, 23.2,  4.1,
-//                               6.1, 10.1, 11.1,  2.1,
-//                               4.1,  6.1, 33.1, 11.1,
-//                              10.1,  9.1, 11.1, 10.1};
-//  // -------------------------------------------------
-//      double cost_matrix[] = {   0,    0,    0,    0,
-//                             0,    1,    1,    0,
-//                             0,    1,    1,    0,
-//                             0,    0,    0,    0};
-//  // -----------------------------------------------------------------------
-//  //  Test example from https://github.com/hrldcpr/hungarian
-//      int edge_length = 8;
-//      double cost_matrix[] = {1000,   2,  11,  10,   9,   7,   6,   5, // #0
-//                                 6,1000,   1,  8,    8,   4,   6,   7, // #1
-//                                 5,  12,1000,  11,   8,  12,   3,  11, // #2
-//                                11,   9,  10,1000,   1,   9,   8,  10, // #3
-//                                11,  11,   9,   4,1000,   2,  10,   9, // #4
-//                                12,   8,   5,   2,  11,1000,  11,   9, // #5
-//                                10,  11,  12,  10,   9,  12,1000,   3, // #6
-//                                10,  10,  10,  10,   6,   3,   1,1000};// #7
-//   //                            0    1    2    3    4    5    6    7
-//   // -----------------------------------------------------------------------
+void get_assignment(int *mask, int width, int length, int *matched_col, int *matched_row)
+{
+    for (int i=0; i<width; ++i)
+        for (int j=0; j<length; ++j)
+            if (*(mask+i*length+j) == 1)
+            {
+                *(matched_col+i) = j;
+                *(matched_row+j) = i;
+            }
+    return;
+}
 
+int munkres(double *cost_matrix, int width, int length, int *matched_col, int *matched_row)
+{//{ matched_col: a list shows the assigned column index for every row.
+ //  For example, {3, 1, 0, 2} means the owner of the 3rd column is matched to the owner of the 0th row,
+ //                                                   1st column            to                  1st row,
+ //                                                   0th column            to                  2nd row,
+ //                                               and 2nd column            to                  3rd row.
     double cost_matrix_copy[width * length];
     memcpy(cost_matrix_copy, cost_matrix, sizeof(double)*width*length);
     int mask_matrix[width * length];
-	memset(mask_matrix, 0, sizeof(int)*width*length);
+    memset(mask_matrix, 0, sizeof(int)*width*length);
     int row_cover[width];
-	memset(row_cover, 0, sizeof(int)*width);
+    memset(row_cover, 0, sizeof(int)*width);
     int col_cover[length];
-	memset(col_cover, 0, sizeof(int)*length);
+    memset(col_cover, 0, sizeof(int)*length);
 
     printf("Step 1 begins...\n");
     step_one(cost_matrix, width, length);
@@ -414,9 +381,74 @@ int main() {
             case 7:
                 done = true;
                 double result = total_cost(cost_matrix_copy, mask_matrix, width, length);
+                get_assignment(mask_matrix, width, length, matched_col, matched_row);
                 printf("-----------------------\nMinimum total cost is %.2lf.\n", result);
-                printf("The End ~");
-                break;
+                printf("The End ~\n");
         }
     }
+    return 0;
+}
+
+int main()
+{
+////  ----------------------------------------
+////  Original test From Dr. Robert A. Pilgrim http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
+//        int width = 3;
+//        int length = 3;
+//        double cost_matrix[] = {1, 2, 3,
+//                                2, 4, 6,
+//                                3, 6, 9};
+
+//// --------------------------------------------------------------------
+////  Test of the example in https://www.wikihow.com/Use-the-Hungarian-Algorithm
+    int width = 5;
+    int length = 4;
+    double cost_matrix[] =
+                         {10, 19, 8, 15,
+                          10, 18, 7, 17,
+                          13, 16, 9, 14,
+                          12, 19, 8, 18,
+                          14, 17,10, 19};
+//// --------------------------------------------------------------------
+////  More tests, for fun
+//    double cost_matrix[] = { 1,  9, 23,  4,
+//                             6, 10, 11,  2,
+//                             5,  4, 33, 11,
+//                            10, 11,  9, 10};
+//// --------------------------------------------------------------------
+//    double cost_matrix[] = { 1,  6,  5, 10,
+//                             9, 10,  4, 11,
+//                            23, 11, 33,  9,
+//                             4,  2, 11, 10};
+//// -------------------------------------------------
+//    double cost_matrix[] = { 1.1,  9.1, 23.2,  4.1,
+//                             6.1, 10.1, 11.1,  2.1,
+//                             4.1,  6.1, 33.1, 11.1,
+//                            10.1,  9.1, 11.1, 10.1};
+//// -------------------------------------------------
+//    double cost_matrix[] = {   0,    0,    0,    0,
+//                           0,    1,    1,    0,
+//                           0,    1,    1,    0,
+//                           0,    0,    0,    0};
+//// -----------------------------------------------------------------------
+////  Test example from https://github.com/hrldcpr/hungarian
+//    int edge_length = 8;
+//    double cost_matrix[] = {1000,   2,  11,  10,   9,   7,   6,   5, // #0
+//                               6,1000,   1,  8,    8,   4,   6,   7, // #1
+//                               5,  12,1000,  11,   8,  12,   3,  11, // #2
+//                              11,   9,  10,1000,   1,   9,   8,  10, // #3
+//                              11,  11,   9,   4,1000,   2,  10,   9, // #4
+//                              12,   8,   5,   2,  11,1000,  11,   9, // #5
+//                              10,  11,  12,  10,   9,  12,1000,   3, // #6
+//                              10,  10,  10,  10,   6,   3,   1,1000};// #7
+////                             0    1    2    3    4    5    6    7
+////  -----------------------------------------------------------------------
+
+    int matched_col[width];
+    memset(matched_col, -1, sizeof(int)*width);
+    int matched_row[length];
+    memset(matched_row, -1, sizeof(int)*length);
+    munkres(cost_matrix, width, length, matched_col, matched_row);
+    printf("matched_col:");print_vector(matched_col, width);
+    printf("matched_row:");print_vector(matched_row, length);
 }
