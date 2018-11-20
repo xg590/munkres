@@ -40,9 +40,6 @@
 #include "stdio.h"
 #include "string.h"
 #include "float.h"
-typedef int bool;
-#define true 1
-#define false 0
 
 void print_cost_matrix(double *cost, int width, int length) // {cost: pointer to cost matrix, width: row number of matrix, length: column number of matrix}
 {
@@ -160,10 +157,10 @@ int step_four(double *cost, int *mask, int width, int length, int *row_cover, in
     int row = -1;
     int col = -1;
     int col_buff = -1;
-    while (true)
+    while (1)
     {
         find_a_noncovered_zero(&row, &col, cost, width, length, row_cover, col_cover);
-        printf("non-covered zero: (%d, %d)\n", row, col);
+//        printf("non-covered zero: (%d, %d)\n", row, col);
         if (row == -1)
         { // no non-covered zeros left
             return 6;
@@ -242,7 +239,6 @@ void erase_primes(int *mask, int width, int length)
 
 int step_five(int *mask, int width, int length, int *row_cover, int *col_cover, int *path_row_0, int *path_col_0)
 {
-    bool done = false;
     int row = -1;
     int col = -1;
     int count = 1;
@@ -250,8 +246,8 @@ int step_five(int *mask, int width, int length, int *row_cover, int *col_cover, 
     memset(path, 0, sizeof(int)*(width+length-1));
     *(path + count*2 - 2) = *path_row_0; // The result from step 4 becomes the first element in a list called path (starting point in path)
     *(path + count*2 - 1) = *path_col_0;
-    printf("starting zero for the zig-zag path: (%d, %d)\n", *path_row_0, *path_col_0);
-    while (!done)
+//    printf("starting zero for the zig-zag path: (%d, %d)\n", *path_row_0, *path_col_0);
+    while (1)
     {
         row = find_star_in_col(mask, *(path + count*2 - 1), length); // Is a starred zero within the column having the starting zero or primed zero (found in following 11th lines)
         if (row > -1)
@@ -300,7 +296,7 @@ int step_six(double *cost, int width, int length, int *row_cover, int *col_cover
                 *(cost + i*length + j) -= min; // affect the non-covered column
         }
     }
-    printf("zero maker works for the noncovered\n");
+//    printf("zero maker works for the noncovered\n");
     return 4;
 }
 
@@ -341,122 +337,70 @@ int munkres(double *cost_matrix, int width, int length, int *matched_col, int *m
     int col_cover[length];
     memset(col_cover, 0, sizeof(int)*length);
 
-    printf("Step 1 begins...\n");
+//    printf("Step 1 begins...\n");
     step_one(cost_matrix, width, length);
-    printf("Step 1 ends, step 2 next...\nStep 2 begins...\n");
+//    printf("Step 1 ends, step 2 next...\nStep 2 begins...\n");
     step_two(cost_matrix, mask_matrix, width, length);
-    printf("Step 2 ends, step 3 next...\n");
+//    printf("Step 2 ends, step 3 next...\n");
     int step = 3;
-    bool done = false;
     int path_row_0;
     int path_col_0;
-    while (!done)
+    while (1)
     {
-        print_cost_matrix(cost_matrix, width, length);printf("\n");
-        print_mask_matrix(mask_matrix, width, length);printf("\n");
-        printf("row_cover");print_vector(row_cover, width);
-        printf("col_cover");print_vector(col_cover, length);
+//        print_cost_matrix(cost_matrix, width, length);printf("\n");
+//        print_mask_matrix(mask_matrix, width, length);printf("\n");
+//        printf("row_cover");print_vector(row_cover, width);
+//        printf("col_cover");print_vector(col_cover, length);
         switch (step)
         {
             case 3:
-                printf("-----------------------\nStep 3 begins...\n");
+//                printf("-----------------------\nStep 3 begins...\n");
                 step = step_three(mask_matrix, width, length, row_cover, col_cover);
-                printf("Step 3 ends, step %d next...\n\n", step);
+//                printf("Step 3 ends, step %d next...\n\n", step);
                 break;
             case 4:
-                printf("-----------------------\nStep 4 begins...\n");
+//                printf("-----------------------\nStep 4 begins...\n");
                 step = step_four(cost_matrix, mask_matrix, width, length, row_cover, col_cover, &path_row_0, &path_col_0);
-                printf("Step 4 ends, step %d next...\n\n", step);
+//                printf("Step 4 ends, step %d next...\n\n", step);
                 break;
             case 5:
-                printf("-----------------------\nStep 5 begins...\n");
+//                printf("-----------------------\nStep 5 begins...\n");
                 step = step_five(mask_matrix, width, length, row_cover, col_cover, &path_row_0, &path_col_0);
-                printf("Step 5 ends, step %d next...\n\n", step);
+//                printf("Step 5 ends, step %d next...\n\n", step);
                 break;
             case 6:
-                printf("-----------------------\nStep 6 begins...\n");
+//                printf("-----------------------\nStep 6 begins...\n");
                 step = step_six(cost_matrix, width, length, row_cover, col_cover);
-                printf("Step 6 ends, step %d next...\n\n", step);
+//                printf("Step 6 ends, step %d next...\n\n", step);
                 break;
             case 7:
-                done = true;
-                double result = total_cost(cost_matrix_copy, mask_matrix, width, length);
                 get_assignment(mask_matrix, width, length, matched_col, matched_row);
-                printf("-----------------------\nMinimum total cost is %.2lf.\n", result);
-                printf("The End ~\n");
+//              ;double result = total_cost(cost_matrix_copy, mask_matrix, width, length);
+//                printf("----------------------------\nMinimum total cost is %.2lf.\n", result);
+                return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 int main()
 {
-////  ----------------------------------------
-////  Original test From Dr. Robert A. Pilgrim http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
-        int width  = 3;
-        int length = 3;
-        double cost_matrix[] = {1, 2, 3,
-                                2, 4, 6,
-                                3, 6, 9};
-//// --------------------------------------------------------------------
-////  Test of the example in https://www.wikihow.com/Use-the-Hungarian-Algorithm
-//    int width  = 5;
-//    int length = 4;
-//    double cost_matrix[] =
-//                         {10, 19, 8, 15,
-//                          10, 18, 7, 17,
-//                          13, 16, 9, 14,
-//                          12, 19, 8, 18,
-//                          14, 17,10, 19};
-//// --------------------------------------------------------------------
-////  More tests, for fun
-//    int width  = 4;
-//    int length = 4;
-//    double cost_matrix[] = { 1,  9, 23,  4,
-//                             6, 10, 11,  2,
-//                             5,  4, 33, 11,
-//                            10, 11,  9, 10};
-//// --------------------------------------------------------------------
-//    int width  = 4;
-//    int length = 4;
-//    double cost_matrix[] = { 1,  6,  5, 10,
-//                             9, 10,  4, 11,
-//                            23, 11, 33,  9,
-//                             4,  2, 11, 10};
-//// -------------------------------------------------
-//    int width  = 4;
-//    int length = 4;
-//    double cost_matrix[] = { 1.1,  9.1, 23.2,  4.1,
-//                             6.1, 10.1, 11.1,  2.1,
-//                             4.1,  6.1, 33.1, 11.1,
-//                            10.1,  9.1, 11.1, 10.1};
-//// -------------------------------------------------
-//    int width  = 4;
-//    int length = 4;
-//    double cost_matrix[] = {   0,    0,    0,    0,
-//                               0,    1,    1,    0,
-//                               0,    1,    1,    0,
-//                               0,    0,    0,    0};
-//// -----------------------------------------------------------------------
-////  Test example from https://github.com/hrldcpr/hungarian
-//    int width  = 8;
-//    int length = 8;
-//    double cost_matrix[] = {1000,   2,  11,  10,   9,   7,   6,   5, // #0
-//                               6,1000,   1,  8,    8,   4,   6,   7, // #1
-//                               5,  12,1000,  11,   8,  12,   3,  11, // #2
-//                              11,   9,  10,1000,   1,   9,   8,  10, // #3
-//                              11,  11,   9,   4,1000,   2,  10,   9, // #4
-//                              12,   8,   5,   2,  11,1000,  11,   9, // #5
-//                              10,  11,  12,  10,   9,  12,1000,   3, // #6
-//                              10,  10,  10,  10,   6,   3,   1,1000};// #7
-////                             0    1    2    3    4    5    6    7
-////  -----------------------------------------------------------------------
+    int width  = 5;
+    int length = 4;
+    double cost_matrix[] =
+                         {10, 19, 8, 15,
+                          10, 18, 7, 17,
+                          13, 16, 9, 14,
+                          12, 19, 8, 18,
+                          14, 17,10, 19};
 
     int matched_col[width];
     memset(matched_col, -1, sizeof(int)*width);
     int matched_row[length];
     memset(matched_row, -1, sizeof(int)*length);
     munkres(cost_matrix, width, length, matched_col, matched_row);
+    printf("Final Assignment\n");
     printf("matched_col:");print_vector(matched_col, width);
     printf("matched_row:");print_vector(matched_row, length);
+    printf("---------\nThe End ~\n");
 }
