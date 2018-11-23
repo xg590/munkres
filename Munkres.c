@@ -312,6 +312,8 @@ double total_cost(double *cost, int *mask, int width, int length)
 
 void get_assignment(int *mask, int width, int length, int *matched_col, int *matched_row)
 {
+    memset(matched_col, -1, sizeof(int)*width);
+    memset(matched_row, -1, sizeof(int)*length);
     for (int i=0; i<width; ++i)
         for (int j=0; j<length; ++j)
             if (*(mask+i*length+j) == 1)
@@ -395,9 +397,7 @@ int main()
                           14, 17,10, 19};
 
     int matched_col[width];
-    memset(matched_col, -1, sizeof(int)*width);
     int matched_row[length];
-    memset(matched_row, -1, sizeof(int)*length);
     munkres(cost_matrix, width, length, matched_col, matched_row);
     printf("Final Assignment\n");
     printf("matched_col:");print_vector(matched_col, width);
