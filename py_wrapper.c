@@ -21,7 +21,6 @@ static PyObject *munkres_wrapper(PyObject *self, PyObject *args)
     if (PyArrObj_cost_matrix->nd!=2)
     {
         PyErr_SetString(PyExc_ValueError, "lap() requires a 2-D matrix");
-        Py_XDECREF(PyObj_cost_matrix);
         Py_XDECREF(PyArrObj_cost_matrix);
         return NULL;
     }
@@ -37,12 +36,10 @@ static PyObject *munkres_wrapper(PyObject *self, PyObject *args)
     if(!(matched_col&&matched_row))
       {
         PyErr_NoMemory();
-        Py_XDECREF(PyObj_cost_matrix);
         Py_XDECREF(PyArrObj_cost_matrix);
         return NULL;
       }
     munkres(cost_matrix, nrow, ncol, matched_col, matched_row);
-    Py_XDECREF(PyObj_cost_matrix);
     Py_XDECREF(PyArrObj_cost_matrix);
 //    printf("matched_col:");print_vector(matched_col, nrow);
     return Py_BuildValue("(NN)", PyObj_row, PyObj_col); /* Callers responsibility to decref. */
