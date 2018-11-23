@@ -5,8 +5,8 @@
 //               mentation. His original C# code is at:
 //               http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
 //               Minor modification and more notes are made in C code.
-//               A PDF which details Robert's example is also provided at:
-//
+//               A PDF which details Robert's example is also provided at: 
+//               https://github.com/xg590/munkres/blob/master/Munkres.pdf
 //============================================================================
 
 /*  This is from Robert A. Pilgrim
@@ -385,7 +385,7 @@ int munkres(double *cost_matrix, int width, int length, int *matched_col, int *m
     return 1;
 }
 
-int main()
+int __main__()
 {
     int width  = 5;
     int length = 4;
@@ -403,4 +403,5 @@ int main()
     printf("matched_col:");print_vector(matched_col, width);
     printf("matched_row:");print_vector(matched_row, length);
     printf("---------\nThe End ~\n");
+    return 0;
 }
