@@ -242,8 +242,8 @@ int step_five(int *mask, int width, int length, int *row_cover, int *col_cover, 
     int row = -1;
     int col = -1;
     int count = 1;
-    int path[width+length-1];
-    memset(path, 0, sizeof(int)*(width+length-1));
+    int path[width*length];
+    memset(path, 0, sizeof(int)*width*length);
     *(path + count*2 - 2) = *path_row_0; // The result from step 4 becomes the first element in a list called path (starting point in path)
     *(path + count*2 - 1) = *path_col_0;
 //    printf("starting zero for the zig-zag path: (%d, %d)\n", *path_row_0, *path_col_0);
@@ -323,7 +323,7 @@ void get_assignment(int *mask, int width, int length, int *matched_col, int *mat
 }
 
 int munkres(double *cost_matrix, int width, int length, int *matched_col, int *matched_row)
-{//{ matched_col: a list shows the assigned column index for every row.
+{//  matched_col: a list shows the assigned column index for every row.
  //  For example, {3, 1, 0, 2} means the owner of the 3rd column is matched to the owner of the 0th row,
  //                                                   1st column            to                  1st row,
  //                                                   0th column            to                  2nd row,
