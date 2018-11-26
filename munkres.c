@@ -330,8 +330,8 @@ int munkres(double *cost_matrix, int width, int length, int *matched_col, int *m
  //                                                   1st column            to                  1st row,
  //                                                   0th column            to                  2nd row,
  //                                               and 2nd column            to                  3rd row.
-    double cost_matrix_copy[width * length];
-    memcpy(cost_matrix_copy, cost_matrix, sizeof(double)*width*length);
+//    double cost_matrix_copy[width * length];
+//    memcpy(cost_matrix_copy, cost_matrix, sizeof(double)*width*length);
     int mask_matrix[width * length];
     memset(mask_matrix, 0, sizeof(int)*width*length);
     int row_cover[width];
